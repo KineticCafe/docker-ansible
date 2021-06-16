@@ -126,7 +126,6 @@ if [[ "$1" == sh ]]; then
   shift
 fi
 
-set -x
 docker run -it --rm --network host \
   --mount "type=bind,src=$(pwd),dst=/repo" \
   --mount "type=bind,src=${HOME}/.ssh,dst=${homedst}/.ssh,readonly" \

@@ -5,8 +5,7 @@ ENV VIRTUAL_ENV=/opt/ansible
 RUN apk add --no-cache --update build-base make libressl-dev musl-dev \
       libffi-dev libressl rust cargo \
       && pip install pip --upgrade \
-      && addgroup -S ansible \
-      && adduser -S -G ansible ansible \
+      && adduser --disabled-password ansible \
       && python -m venv $VIRTUAL_ENV \
       && chown -R ansible:ansible /opt/ansible
 
@@ -23,13 +22,10 @@ FROM python:3.9-alpine
 ENV VIRTUAL_ENV=/opt/ansible
 
 RUN apk add --no-cache --update sshpass nano libressl \
-      && addgroup -S ansible \
-      && adduser -S -G ansible ansible \
+      && adduser --disabled-password ansible \
       && python -m venv $VIRTUAL_ENV
 
-COPY --from=builder /opt/ansible /opt/ansible
-
-RUN chown -R ansible:ansible /opt/ansible
+COPY --chown=ansible:ansible --from=builder /opt/ansible /opt/ansible
 
 WORKDIR /repo
 USER ansible

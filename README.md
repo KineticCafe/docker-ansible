@@ -1,13 +1,10 @@
 # Ansible in Docker
 
-This is a simple Docker container that contains [Ansible]. This is the _first
-version_ of the container. It has been created so that it's easier to work with
-`ansible-playbook` without going through the effort of installing it on various
-systems.
+This is a simple Docker container that contains [Ansible]. It has been created
+so that it's easier to work with `ansible-playbook` without going through the
+effort of installing it on various systems.
 
-The image is based on Alpine Linux.
-
-This version of the container includes:
+The image is based on Alpine Linux and includes:
 
 - Ansible 4.0.0
 
