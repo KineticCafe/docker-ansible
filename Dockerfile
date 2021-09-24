@@ -15,10 +15,9 @@ ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 
 COPY requirements.txt .
 
-RUN if [ "${TARGETPLATFORM}" = linux/arm64 ]; then \
-      CRYPTOGRAPHY_DONT_BUILD_RUST=1 pip install -r requirements.txt \
-    else \
-      pip install -r requirements.txt \
+RUN if [ "${TARGETPLATFORM}" = linux/arm64 ]; \
+    then CRYPTOGRAPHY_DONT_BUILD_RUST=1 pip install -r requirements.txt; \
+    else pip install -r requirements.txt; \
     fi
 
 FROM python:3.9-alpine
