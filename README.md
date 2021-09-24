@@ -6,7 +6,7 @@ effort of installing it on various systems.
 
 The image is based on Alpine Linux and includes:
 
-- Ansible 4.0.0
+- Ansible 4.2.0
 
 ## Support
 

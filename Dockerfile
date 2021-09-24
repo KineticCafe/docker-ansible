@@ -3,7 +3,7 @@ FROM python:3.9-alpine AS builder
 ENV VIRTUAL_ENV=/opt/ansible
 
 RUN apk add --quiet --no-cache --update \
-      build-base make libressl-dev musl-dev libffi-dev libressl curl \
+      build-base make libressl-dev musl-dev libffi-dev libressl curl rust \
       && pip install pip --upgrade \
       && adduser --disabled-password ansible \
       && python -m venv $VIRTUAL_ENV \
@@ -11,15 +11,15 @@ RUN apk add --quiet --no-cache --update \
 
 USER ansible
 
-RUN curl https://sh.rustup.rs -sSf -o /tmp/rustup-init.sh \
-      && chmod +x /tmp/rustup-init.sh \
-      && /tmp/rustup-init.sh -y -q
-
-ENV PATH="$VIRTUAL_ENV/bin:$HOME/.cargo/bin:$PATH"
+ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 
 COPY requirements.txt .
 
-RUN pip install -r requirements.txt
+RUN if [ "${TARGETPLATFORM}" = linux/arm64 ]; then \
+      CRYPTOGRAPHY_DONT_BUILD_RUST=1 pip install -r requirements.txt \
+    else \
+      pip install -r requirements.txt \
+    fi
 
 FROM python:3.9-alpine
 
