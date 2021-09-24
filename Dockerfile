@@ -23,7 +23,8 @@ ENV VIRTUAL_ENV=/opt/ansible
 
 RUN apk add --no-cache --update sshpass nano libressl \
       && adduser --disabled-password ansible \
-      && python -m venv $VIRTUAL_ENV
+      && python -m venv $VIRTUAL_ENV \
+      && chown -R ansible:ansible /opt/ansible
 
 COPY --chown=ansible:ansible --from=builder /opt/ansible /opt/ansible
 

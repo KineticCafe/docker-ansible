@@ -1,5 +1,11 @@
 # docker-ansible Changelog
 
+## 1.1.0 / 2021-09-23
+
+- Upgraded to Ansible 4.2.0 via dependendabot.
+
+- Minor modification to the Dockerfile.
+
 ## 1.0.1 / 2021-06-16
 
 - When creating a run user of `ansible`, it cannot be a `system` user to be able
