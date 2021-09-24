@@ -11,7 +11,7 @@ RUN apk add --quiet --no-cache --update \
 
 USER ansible
 
-RUN curl https://sh.rustup.rs -sSf | sh -- -yq
+RUN curl https://sh.rustup.rs -sSf | sh
 
 ENV PATH="$VIRTUAL_ENV/bin:$HOME/.cargo/bin:$PATH"
 
