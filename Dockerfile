@@ -2,8 +2,8 @@ FROM python:3.9-alpine AS builder
 
 ENV VIRTUAL_ENV=/opt/ansible
 
-RUN apk add --no-cache --update build-base make libressl-dev musl-dev \
-      libffi-dev libressl curl rustup \
+RUN apk add --quiet --no-cache --update \
+      build-base make libressl-dev musl-dev libffi-dev libressl curl \
       && pip install pip --upgrade \
       && adduser --disabled-password ansible \
       && python -m venv $VIRTUAL_ENV \
@@ -11,7 +11,7 @@ RUN apk add --no-cache --update build-base make libressl-dev musl-dev \
 
 USER ansible
 
-RUN rustup-init -yq
+RUN curl https://sh.rustup.rs -sSf | sh -- -yq
 
 ENV PATH="$VIRTUAL_ENV/bin:$HOME/.cargo/bin:$PATH"
 
