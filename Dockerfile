@@ -4,13 +4,14 @@ ENV VIRTUAL_ENV=/opt/ansible
 
 RUN apk add --no-cache --update build-base make libressl-dev musl-dev \
       libffi-dev libressl curl rustup \
-      && rustup-init -yq \
       && pip install pip --upgrade \
       && adduser --disabled-password ansible \
       && python -m venv $VIRTUAL_ENV \
       && chown -R ansible:ansible /opt/ansible
 
 USER ansible
+
+RUN rustup-init -yq
 
 ENV PATH="$VIRTUAL_ENV/bin:$HOME/.cargo/bin:$PATH"
 
