@@ -3,6 +3,7 @@ FROM python:3.9-slim-buster AS builder
 ENV VIRTUAL_ENV=/opt/ansible
 
 RUN apt-get -qqy update \
+      && apt-get -qqy install build-essential \
       && pip install pip --upgrade \
       && adduser --disabled-password ansible \
       && python -m venv $VIRTUAL_ENV \
