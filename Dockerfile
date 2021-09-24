@@ -1,9 +1,8 @@
-FROM python:3.9-alpine AS builder
+FROM python:3.9-slim-buster AS builder
 
 ENV VIRTUAL_ENV=/opt/ansible
 
-RUN apk add --quiet --no-cache --update \
-      build-base make libressl-dev musl-dev libffi-dev libressl curl rust \
+RUN apt-get -qqy update \
       && pip install pip --upgrade \
       && adduser --disabled-password ansible \
       && python -m venv $VIRTUAL_ENV \
@@ -15,17 +14,13 @@ ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 
 COPY requirements.txt .
 
-RUN if [ "${TARGETPLATFORM}" = linux/arm64 ]; \
-    then CRYPTOGRAPHY_DONT_BUILD_RUST=1 pip install -r requirements.txt; \
-    else pip install -r requirements.txt; \
-    fi
+RUN pip install -r requirements.txt
 
-FROM python:3.9-alpine
+FROM python:3.9-slim-buster
 
 ENV VIRTUAL_ENV=/opt/ansible
 
-RUN apk add --no-cache --update sshpass nano libressl \
-      && adduser --disabled-password ansible \
+RUN adduser --disabled-password ansible \
       && python -m venv $VIRTUAL_ENV \
       && chown -R ansible:ansible /opt/ansible
 
@@ -41,4 +36,3 @@ ENV LESS=-R \
 
 ENTRYPOINT ["ansible-playbook"]
 CMD ["--help"]
-
