@@ -3,7 +3,12 @@ FROM python:3.9-slim-buster AS builder
 ENV VIRTUAL_ENV=/opt/ansible
 
 RUN apt-get -qqy update \
-      && apt-get -qqy install build-essential \
+      && apt-get -qqy upgrade \
+      && apt-get -qqy --no-install-recommends install \
+            build-essential \
+            python-dev \
+            libffi-dev \
+            rustc \
       && pip install pip --upgrade \
       && adduser --disabled-password ansible \
       && python -m venv $VIRTUAL_ENV \
@@ -21,7 +26,9 @@ FROM python:3.9-slim-buster
 
 ENV VIRTUAL_ENV=/opt/ansible
 
-RUN adduser --disabled-password ansible \
+RUN apt-get -qqy update \
+      && apt-get -qqy upgrade \
+      && adduser --disabled-password ansible \
       && python -m venv $VIRTUAL_ENV \
       && chown -R ansible:ansible /opt/ansible
 
