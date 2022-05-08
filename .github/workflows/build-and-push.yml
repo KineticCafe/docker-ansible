@@ -1,4 +1,4 @@
-name: build-and-push
+name: CI/CD
 
 on:
   push:
@@ -9,12 +9,15 @@ on:
   pull_request:
     branches:
       - 'main'
+  schedule:
+    - cron: '0 10 25 * *' # Monthly at 10am on the 25th
 
 jobs:
-  docker:
+  build:
+    name: Build and Push to Docker Hub
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Check out the repo
         uses: actions/checkout@v2
       - name: Docker meta
         id: meta
@@ -53,6 +56,5 @@ jobs:
           platforms: |
             linux/amd64
             linux/arm64
-            linux/arm/v7
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}

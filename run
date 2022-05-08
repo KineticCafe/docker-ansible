@@ -1,7 +1,7 @@
 #! /bin/bash
 
 declare image user need_vault arg
-image=${IMAGE:-kineticcafe/ansible:latest}
+image=${IMAGE:-kineticcafe/ansible:2.0.0}
 user="${USER-$(whoami)}"
 need_vault=true
 

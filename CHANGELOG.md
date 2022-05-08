@@ -1,5 +1,15 @@
 # docker-ansible Changelog
 
+## 2.0.0 / 2022-05-08
+
+- Upgraded to Ansible 5.7.1
+
+- Switched from alpine to Debian Buster (slim) as the base image.
+
+- Removed linux/arm/v7 because of Rust requirements.
+
+- Restricted the `run` script to use a correct tag.
+
 ## 1.1.0 / 2021-09-23
 
 - Upgraded to Ansible 4.2.0 via dependendabot.
