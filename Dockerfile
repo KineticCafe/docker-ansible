@@ -1,6 +1,8 @@
-FROM python:3.9-slim-buster AS builder
+FROM python:3.10-slim-bullseye AS builder
 
-ENV VIRTUAL_ENV=/opt/ansible
+ENV LC_ALL=C.UTF-8 \
+      LANG=C.UTF-8 EDITOR=nano \
+      PIPENV_VENV_IN_PROJECT=1
 
 RUN apt-get -qqy update \
       && apt-get -qqy upgrade \
@@ -9,27 +11,26 @@ RUN apt-get -qqy update \
             python-dev \
             libffi-dev \
             rustc \
-      && pip install pip --upgrade \
-      && adduser --disabled-password ansible \
-      && python -m venv $VIRTUAL_ENV \
+      && adduser --disabled-password --gecos '' ansible \
+      && python3 -m pip install pip --upgrade \
+      && mkdir -p /opt/ansible \
       && chown -R ansible:ansible /opt/ansible
 
 USER ansible
 
-ENV PATH="$VIRTUAL_ENV/bin:$PATH"
+WORKDIR /opt/ansible
 
-COPY requirements.txt .
+ADD Pipfile Pipfile.lock /opt/ansible/
 
-RUN pip install -r requirements.txt
+RUN python3 -m pip install --user pipenv \
+      && /home/ansible/.local/bin/pipenv sync
 
-FROM python:3.9-slim-buster
-
-ENV VIRTUAL_ENV=/opt/ansible
+FROM python:3.10-slim-bullseye AS runtime
 
 RUN apt-get -qqy update \
       && apt-get -qqy upgrade \
-      && adduser --disabled-password ansible \
-      && python -m venv $VIRTUAL_ENV \
+      && adduser --disabled-password --gecos '' ansible \
+      && mkdir -p /opt/ansible \
       && chown -R ansible:ansible /opt/ansible
 
 COPY --chown=ansible:ansible --from=builder /opt/ansible /opt/ansible
@@ -40,7 +41,7 @@ USER ansible
 ENV LESS=-R \
       LC_ALL=C.UTF-8 \
       LANG=C.UTF-8 EDITOR=nano \
-      PATH="$VIRTUAL_ENV/bin:$PATH"
+      PATH="/opt/ansible/.venv/bin:$PATH"
 
 ENTRYPOINT ["ansible-playbook"]
 CMD ["--help"]

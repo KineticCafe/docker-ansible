@@ -1,5 +1,16 @@
 # docker-ansible Changelog
 
+## 3.0.0 / 2022-12-26
+
+- Upgraded to Ansible 7.1.0
+
+- Upgraded from Debian Buster (slim) to Debian Bullseye (slim) as the base
+  image. Using python 3.10 instead of python 3.9.
+
+- Changed from `requirements.txt` to `Pipfile` and am now using pipenv.
+
+- Fixed issues for running the Ansible scripts in a non-interactive environment.
+
 ## 2.0.0 / 2022-05-08
 
 - Upgraded to Ansible 5.7.1

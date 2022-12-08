@@ -1,13 +1,16 @@
 #! /bin/bash
 
-declare image user need_vault arg
-image=${IMAGE:-kineticcafe/ansible:2.0.0}
+declare image user need_vault arg vault_password_file interactive
+image=${IMAGE:-kineticcafe/ansible:3.0.0}
 user="${USER-$(whoami)}"
 need_vault=true
+vault_password_file=
+interactive=true
 
-declare -a passopt extra
+declare -a passopt extra args
 passopt=()
 extra=()
+args=()
 
 homedst=/home/ansible
 if [[ "$(id -u "${user}")" -eq 0 ]]; then
@@ -17,18 +20,31 @@ passopt+=(-e "HOME=${homedst}")
 
 case "$1" in
 ansible-*)
-  passopt+=(--entrypoint)
+  passopt+=(--entrypoint "$1")
   need_vault=false
+  shift
   ;;
 esac
 
-for arg in "${@}"; do
-  case "${arg}" in
-  --ask-vault-password | --vault-password-file)
+while (($#)); do
+  case "$1" in
+  --non-interactive)
+    interactive=false
+    ;;
+  --ask-vault-password)
     need_vault=false
-    break
+    args+=("$1")
+    ;;
+  --vault-password-file | --vault-pass-file)
+    vault_password_file="$2"
+    shift
+    ;;
+  *)
+    args+=("$1")
     ;;
   esac
+
+  shift
 done
 
 for arg in \
@@ -75,7 +91,7 @@ for arg in \
   ANSIBLE_TASK_TIMEOUT ANSIBLE_TERMINAL_PLUGINS ANSIBLE_TEST_PLUGINS ANSIBLE_TIMEOUT \
   ANSIBLE_TRANSFORM_INVALID_GROUP_CHARS ANSIBLE_TRANSPORT ANSIBLE_USE_PERSISTENT_CONNECTIONS ANSIBLE_VARS_PLUGINS \
   ANSIBLE_VAULT_ENCRYPT_IDENTITY ANSIBLE_VAULT_ID_MATCH ANSIBLE_VAULT_IDENTITY ANSIBLE_VAULT_IDENTITY_LIST \
-  ANSIBLE_VAULT_PASSWORD_FILE ANSIBLE_VERBOSE_TO_STDERR ANSIBLE_VERBOSITY ANSIBLE_WIN_ASYNC_STARTUP_TIMEOUT \
+  ANSIBLE_VERBOSE_TO_STDERR ANSIBLE_VERBOSITY ANSIBLE_WIN_ASYNC_STARTUP_TIMEOUT \
   ANSIBLE_WORKER_SHUTDOWN_POLL_COUNT ANSIBLE_WORKER_SHUTDOWN_POLL_DELAY ANSIBLE_YAML_FILENAME_EXT ANY_ERRORS_FATAL \
   BECOME_ALLOW_SAME_USER BECOME_PLUGIN_PATH CACHE_PLUGIN CACHE_PLUGIN_CONNECTION CACHE_PLUGIN_PREFIX \
   CACHE_PLUGIN_TIMEOUT CALLABLE_ACCEPT_LIST COLLECTIONS_ON_ANSIBLE_VERSION_MISMATCH COLLECTIONS_PATHS \
@@ -96,7 +112,7 @@ for arg in \
   DEFAULT_STDOUT_CALLBACK DEFAULT_STRATEGY DEFAULT_STRATEGY_PLUGIN_PATH DEFAULT_SU DEFAULT_SYSLOG_FACILITY \
   DEFAULT_TASK_INCLUDES_STATIC DEFAULT_TERMINAL_PLUGIN_PATH DEFAULT_TEST_PLUGIN_PATH DEFAULT_TIMEOUT \
   DEFAULT_TRANSPORT DEFAULT_UNDEFINED_VAR_BEHAVIOR DEFAULT_VARS_PLUGIN_PATH DEFAULT_VAULT_ENCRYPT_IDENTITY \
-  DEFAULT_VAULT_ID_MATCH DEFAULT_VAULT_IDENTITY DEFAULT_VAULT_IDENTITY_LIST DEFAULT_VAULT_PASSWORD_FILE \
+  DEFAULT_VAULT_ID_MATCH DEFAULT_VAULT_IDENTITY DEFAULT_VAULT_IDENTITY_LIST \
   DEFAULT_VERBOSITY DEPRECATION_WARNINGS DEVEL_WARNING DIFF_ALWAYS DIFF_CONTEXT DISPLAY_ARGS_TO_STDOUT \
   DISPLAY_SKIPPED_HOSTS DOC_FRAGMENT_PLUGIN_PATH DUPLICATE_YAML_DICT_KEY ERROR_ON_MISSING_HANDLER FACTS_MODULES \
   GALAXY_CACHE_DIR GALAXY_DISPLAY_PROGRESS GALAXY_IGNORE_CERTS GALAXY_ROLE_SKELETON GALAXY_ROLE_SKELETON_IGNORE \
@@ -114,7 +130,19 @@ for arg in \
   [[ -n "${!arg}" ]] && passopt+=(-e "${var}=${!arg}")
 done
 
-[[ -n "${ANSIBLE_VAULT_PASSWORD_FILE}" ]] && need_vault=false
+declare vpf
+vpf="${vault_password_file:-"${ANSIBLE_VAULT_PASSWORD_FILE:-"${DEFAULT_VAULT_PASSWORD_FILE}"}"}"
+
+if [[ -n "${vpf}" ]]; then
+  if [[ -s "${vpf}" ]]; then
+    need_vault=false
+    passopt+=(--mount "type=bind,src=${vpf},dst=/tmp/vault_password_file,readonly")
+    extra+=(--vault-password-file /tmp/vault_password_file)
+  else
+    echo >&2 "Error: Cannot find vault password file '${vpf}'."
+    exit 1
+  fi
+fi
 
 "${need_vault}" && extra+=(--ask-vault-password)
 
@@ -126,7 +154,14 @@ if [[ "$1" == sh ]]; then
   shift
 fi
 
-docker run -it --rm --network host \
+if "${interactive}"; then
+  interactive="-it"
+else
+  interactive=
+fi
+
+# shellcheck disable=SC2086
+docker run ${interactive} --rm --network host \
   --mount "type=bind,src=$(pwd),dst=/repo" \
   --mount "type=bind,src=${HOME}/.ssh,dst=${homedst}/.ssh,readonly" \
-  "${passopt[@]}" "${image}" "$@" "${extra[@]}"
+  "${passopt[@]}" "${image}" "${args[@]}" "${extra[@]}"
