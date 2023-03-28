@@ -1,4 +1,4 @@
-FROM python:3.10-slim-bullseye AS builder
+FROM python:3.11-slim-bullseye AS builder
 
 ENV LC_ALL=C.UTF-8 \
       LANG=C.UTF-8 EDITOR=nano \
@@ -18,6 +18,10 @@ RUN apt-get -qqy update \
 
 USER ansible
 
+ENV LC_ALL=C.UTF-8 \
+      LANG=C.UTF-8 EDITOR=nano \
+      PIPENV_VENV_IN_PROJECT=1
+
 WORKDIR /opt/ansible
 
 ADD Pipfile Pipfile.lock /opt/ansible/
@@ -25,7 +29,7 @@ ADD Pipfile Pipfile.lock /opt/ansible/
 RUN python3 -m pip install --user pipenv \
       && /home/ansible/.local/bin/pipenv sync
 
-FROM python:3.10-slim-bullseye AS runtime
+FROM python:3.11-slim-bullseye AS runtime
 
 RUN apt-get -qqy update \
       && apt-get -qqy upgrade \
