@@ -1,11 +1,17 @@
-# docker-ansible Changelog
+# [ghcr.io/]kineticcafe/ansible Changelog
+
+## 3.1.0 / 2023-03-28
+
+- Upgraded to Ansible 7.3.0
+
+- Upgraded to Python 3.11.
 
 ## 3.0.0 / 2022-12-26
 
 - Upgraded to Ansible 7.1.0
 
 - Upgraded from Debian Buster (slim) to Debian Bullseye (slim) as the base
-  image. Using python 3.10 instead of python 3.9.
+  image. Using Python 3.10 instead of Python 3.9.
 
 - Changed from `requirements.txt` to `Pipfile` and am now using pipenv.
 

@@ -1,51 +1,22 @@
 #! /bin/bash
 
-declare image user need_vault arg vault_password_file interactive
-image=${IMAGE:-kineticcafe/ansible:3.0.0}
+declare image user need_vault arg vault_password_file entrypoint
+image=${IMAGE:-ghcr.io/kineticcafe/ansible:3.1}
 user="${USER-$(whoami)}"
 need_vault=true
 vault_password_file=
-interactive=true
 
-declare -a passopt extra args
+declare -a passopt extra args interactive
 passopt=()
 extra=()
 args=()
+interactive=(-it)
 
-homedst=/home/ansible
+home_dst=/home/ansible
 if [[ "$(id -u "${user}")" -eq 0 ]]; then
-  homedst=/root
+  home_dst=/root
 fi
-passopt+=(-e "HOME=${homedst}")
-
-case "$1" in
-ansible-*)
-  passopt+=(--entrypoint "$1")
-  need_vault=false
-  shift
-  ;;
-esac
-
-while (($#)); do
-  case "$1" in
-  --non-interactive)
-    interactive=false
-    ;;
-  --ask-vault-password)
-    need_vault=false
-    args+=("$1")
-    ;;
-  --vault-password-file | --vault-pass-file)
-    vault_password_file="$2"
-    shift
-    ;;
-  *)
-    args+=("$1")
-    ;;
-  esac
-
-  shift
-done
+passopt+=(-e "HOME=${home_dst}")
 
 for arg in \
   _ANSIBLE_COVERAGE_REMOTE_OUTPUT _ANSIBLE_COVERAGE_REMOTE_PATH_FILTER ACTION_WARNINGS AGNOSTIC_BECOME_PROMPT \
@@ -144,24 +115,73 @@ if [[ -n "${vpf}" ]]; then
   fi
 fi
 
-"${need_vault}" && extra+=(--ask-vault-password)
+if [[ -d "${HOME}"/.ansible/roles ]]; then
+  passopt+=(--mount "type=bind,src=${HOME}/.ansible/roles,dst=${home_dst}/.ansible/roles,readonly")
+fi
 
-[[ -d "${HOME}"/.ansible/roles ]] &&
-  passopt+=(--mount "type=bind,src=${HOME}/.ansible/roles,dst=${homedst}/.ansible/roles,readonly")
+if [[ -d "${HOME}"/.ssh ]]; then
+  passopt+=(--mount "type=bind,src=${HOME}/.ssh,dst=${home_dst}/.ssh,readonly")
+fi
 
-if [[ "$1" == sh ]]; then
-  passopt+=(--entrypoint /bin/sh)
+declare entrypoint
+
+while (($#)); do
+  case "$1" in
+  --non-interactive)
+    interactive=()
+    ;;
+  --ask-vault-password)
+    need_vault=false
+    args+=("$1")
+    ;;
+  --vault-password-file | --vault-pass-file)
+    vault_password_file="$2"
+    shift
+    ;;
+  *)
+    args+=("$1")
+    ;;
+  esac
+
+  shift
+done
+
+set -- "${args[@]}"
+
+[[ -t 0 ]] || interactive=()
+
+case "$1" in
+sh | nano) entrypoint="$1" ;;
+ansible-config | ansible-galaxy | ansible-test) entrypoint="$1" ;;
+ansible-connection | ansible-inventory | ansible-vault) entrypoint="$1" ;;
+ansible | ansible-console) entrypoint="$1" ;;
+ansible-community | ansible-doc | ansible-pull) entrypoint="$1" ;;
+version)
+  need_vault=false
+  shift
+  set -- --version "${@}"
+  ;;
+esac
+
+if [[ -n "${entrypoint}" ]]; then
+  passopt+=(--entrypoint "${entrypoint}")
   shift
 fi
 
-if "${interactive}"; then
-  interactive="-it"
-else
-  interactive=
+if [[ "$*" =~ --version ]] || [[ "$*" =~ --help ]]; then
+  need_vault=false
+fi
+
+if "${need_vault}"; then
+  if ((${#interactive[@]} == 0)); then
+    echo >&2 "Error: Cannot ask vault password file in non-interactive mode."
+    exit 1
+  fi
+
+  extra+=(--ask-vault-password)
 fi
 
 # shellcheck disable=SC2086
-docker run ${interactive} --rm --network host \
+docker run "${interactive[@]}" --rm --network host \
   --mount "type=bind,src=$(pwd),dst=/repo" \
-  --mount "type=bind,src=${HOME}/.ssh,dst=${homedst}/.ssh,readonly" \
-  "${passopt[@]}" "${image}" "${args[@]}" "${extra[@]}"
+  "${passopt[@]}" "${image}" "${@}" "${extra[@]}"
