@@ -1,5 +1,9 @@
 # [ghcr.io/]kineticcafe/ansible Changelog
 
+## 3.2.0 / 2023-06-02
+
+- Upgraded to Ansible 7.6.0
+
 ## 3.1.0 / 2023-03-28
 
 - Upgraded to Ansible 7.3.0
@@ -13,7 +17,7 @@
 - Upgraded from Debian Buster (slim) to Debian Bullseye (slim) as the base
   image. Using Python 3.10 instead of Python 3.9.
 
-- Changed from `requirements.txt` to `Pipfile` and am now using pipenv.
+- Changed from `requirements.txt` to `Pipfile` with pipenv.
 
 - Fixed issues for running the Ansible scripts in a non-interactive environment.
 

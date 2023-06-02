@@ -1,11 +1,11 @@
 -i https://pypi.python.org/simple
-ansible==7.3.0
-ansible-core==2.14.4 ; python_version >= '3.9'
+ansible==7.6.0
+ansible-core==2.14.6 ; python_version >= '3.9'
 cffi==1.15.1
-cryptography==40.0.1 ; python_version >= '3.6'
+cryptography==41.0.1 ; python_version >= '3.7'
 jinja2==3.1.2 ; python_version >= '3.7'
 markupsafe==2.1.2 ; python_version >= '3.7'
-packaging==23.0 ; python_version >= '3.7'
+packaging==23.1 ; python_version >= '3.7'
 pycparser==2.21
 pyyaml==6.0 ; python_version >= '3.6'
 resolvelib==0.8.1
