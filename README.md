@@ -39,7 +39,7 @@ $ IMAGE=kineticcafe/ansible:latest ./run --version
 
 3. Run `pipenv update`.
 
-4. Run `pipenv requirements > requirements.txt`.
+4. Run `pipenv requirements --hash > requirements.txt`.
 
 5. Update `CHANGELOG.md` and `README.md` as required.
 
