@@ -6,7 +6,7 @@ effort of installing it on various systems.
 
 The image is based on Debian Bullseye (slim) and includes:
 
-- Ansible 7.3.0
+- Ansible 7 (7.7.0 or later)
 - Python 3.11
 
 These images can be pulled either from Docker Hub
