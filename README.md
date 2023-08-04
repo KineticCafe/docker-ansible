@@ -33,14 +33,15 @@ $ IMAGE=kineticcafe/ansible:latest ./run --version
 
 ## Maintenance/Upgrade Instructions
 
-1. Edit the `Dockerfile` to update the Python version, if required.
+1. Install [pdm][]: `pipx install pdm`.
 
-2. Edit the `Pipfile` to change the requirements, if required.
+2. Edit the `Dockerfile` to update the Python version, if required.
 
-3. Run `pipenv update`.
+3. Edit the `pyproject.toml` to change the dependencies, if required.
 
-4. Run `pipenv requirements --hash > requirements.txt`.
+4. Run `pdm update`.
 
 5. Update `CHANGELOG.md` and `README.md` as required.
 
 [ansible]: https://www.ansible.com/community
+[pdm]: https://github.com/pdm-project/pdm

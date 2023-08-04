@@ -1,0 +1,26 @@
+[build-system]
+requires = ["pdm-backend"]
+build-backend = "pdm.backend"
+
+[project]
+name = "docker-ansible"
+version = "4.0.0"
+description = "Ansible in Docker"
+authors = [{ name = "Austin Ziegler", email = "aziegler@kineticcommerce.com" }]
+dependencies = ["ansible~=8.2"]
+requires-python = ">=3.11"
+license = { text = "MIT" }
+
+[project.urls]
+Documentation = "https://github.com/KineticCafe/docker-ansible#readme"
+Issues = "https://github.com/KineticCafe/docker-ansible/issues"
+Source = "https://github.com/KineticCafe/docker-ansible"
+
+[tool.pdm]
+[[tool.pdm.source]]
+url = "https://pypi.python.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[tool.pdm.dev-dependencies]
+dev = []

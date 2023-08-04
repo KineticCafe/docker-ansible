@@ -1,5 +1,22 @@
 # [ghcr.io/]kineticcafe/ansible Changelog
 
+## 4.0.0 / 2023-08-04
+
+- Upgraded to Ansible 8.2.0
+
+- Changed from [pipenv][] to [pdm][] and `pyproject.toml` because of ongoing
+  issues with Dependabot not detecting dependencies in `Pipfile.lock` as
+  opposed to only in `requirements.txt` (the inverse of
+  dependabot/dependabot-core#6200). After trying Poetry (predates the latest
+  Python packaging PEPs), rye (experimental), and hatch (no lock file), [pdm][]
+  seems to fit the bill best for the limited needs that we have with this
+  project.
+
+- Experimentally removed the generated `requirements.txt` file. It isn't used,
+  but it has been valuable in getting update notifications from Dependabot,
+  although the update PRs are less useful. If required, we can add it back with
+  `pdm export -f requirements > requirements.txt`.
+
 ## 3.3.0 / 2023-07-17
 
 - Upgraded to Ansible 7.7.0
@@ -21,7 +38,7 @@
 - Upgraded from Debian Buster (slim) to Debian Bullseye (slim) as the base
   image. Using Python 3.10 instead of Python 3.9.
 
-- Changed from `requirements.txt` to `Pipfile` with pipenv.
+- Changed from `requirements.txt` to `Pipfile` with [pipenv][].
 
 - Fixed issues for running the Ansible scripts in a non-interactive environment.
 
@@ -54,3 +71,6 @@
 ## 1.0 / 2021-05-21
 
 - Initial released version.
+
+[pipenv]: https://pipenv.pypa.io/en/latest/
+[pdm]: https://github.com/pdm-project/pdm
