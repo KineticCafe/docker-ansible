@@ -1,8 +1,8 @@
 FROM python:3.11-slim-bullseye AS builder
 
 ENV LC_ALL=C.UTF-8 \
-      LANG=C.UTF-8 EDITOR=nano \
-      PIPENV_VENV_IN_PROJECT=1
+    LANG=C.UTF-8 \
+    EDITOR=nano
 
 RUN apt-get -qqy update \
       && apt-get -qqy upgrade \
@@ -19,15 +19,15 @@ RUN apt-get -qqy update \
 USER ansible
 
 ENV LC_ALL=C.UTF-8 \
-      LANG=C.UTF-8 EDITOR=nano \
-      PIPENV_VENV_IN_PROJECT=1
+    LANG=C.UTF-8 \
+    EDITOR=nano
 
 WORKDIR /opt/ansible
 
-ADD Pipfile Pipfile.lock /opt/ansible/
+ADD pyproject.toml pdm.lock /opt/ansible/
 
-RUN python3 -m pip install --user pipenv \
-      && /home/ansible/.local/bin/pipenv sync
+RUN python3 -m pip install --user pdm \
+      && /home/ansible/.local/bin/pdm sync --clean --production --no-editable
 
 FROM python:3.11-slim-bullseye AS runtime
 
