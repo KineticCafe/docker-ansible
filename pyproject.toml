@@ -4,11 +4,11 @@ build-backend = "pdm.backend"
 
 [project]
 name = "docker-ansible"
-version = "4.0.0"
+version = "5.0.0"
 description = "Ansible in Docker"
 authors = [{ name = "Austin Ziegler", email = "aziegler@kineticcommerce.com" }]
 dependencies = ["ansible~=8.2"]
-requires-python = ">=3.11"
+requires-python = ">=3.12"
 license = { text = "MIT" }
 
 [project.urls]

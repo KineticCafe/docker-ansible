@@ -1,5 +1,40 @@
 # [ghcr.io/]kineticcafe/ansible Changelog
 
+## 5.0.0 / 2023-11-03
+
+- Upgraded to Python 3.12
+
+- Upgraded to Ansible 8.5.0
+
+- Renamed the `run` script to `kineticcafe-ansible` and fixed several issues:
+
+  - Bash 4 or later is required for associative array support. Ensured that
+    this would be respected on macOS by using `/usr/bin/env bash` instead of
+    `/bin/bash`.
+
+  - Updated the script to use the current version of the image.
+
+  - Fixed various issues with file and directory mounts. Many more mountable
+    files (`--become-password-file`, etc.) are supported than
+    `--vault-password-file`. Note that not _all_ possible file parameters are
+    supported, such as `--module-paths` or `--extra-vars @file`. Pull requests
+    for supporting these would be considered.
+
+  - Fixed an overzealous application of `--ask-vault-password`, even for
+    commands that could not use it.
+
+  - Changed the `sh` subcommand to execute `bash` and added `bash` as a known
+    subcommand.
+
+  - Added support for deriving the entry point from `basename $0`.
+
+- Updated the Docker image to use HEREDOC.
+
+  - Added `less`, `nano`, and `vim-nox` packages.
+
+- Added an `install` script to install `kineticcafe-ansible` and optional
+  symlinks.
+
 ## 4.0.0 / 2023-08-04
 
 - Upgraded to Ansible 8.2.0
