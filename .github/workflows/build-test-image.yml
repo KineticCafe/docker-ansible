@@ -25,6 +25,6 @@ jobs:
           push: false
           tags: kineticcafe/ansible:test
 
-      - run: ./run --version
+      - run: ./kineticcafe-ansible --version
         env:
           IMAGE: kineticcafe/ansible:test
