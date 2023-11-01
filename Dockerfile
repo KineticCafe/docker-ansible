@@ -1,4 +1,4 @@
-FROM python:3.11-slim-bullseye AS builder
+FROM python:3.12-slim-bullseye AS builder
 
 ENV LC_ALL=C.UTF-8 \
     LANG=C.UTF-8 \
@@ -29,7 +29,7 @@ ADD pyproject.toml pdm.lock /opt/ansible/
 RUN python3 -m pip install --user pdm \
       && /home/ansible/.local/bin/pdm sync --clean --production --no-editable
 
-FROM python:3.11-slim-bullseye AS runtime
+FROM python:3.12-slim-bullseye AS runtime
 
 RUN apt-get -qqy update \
       && apt-get -qqy upgrade \
