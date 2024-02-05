@@ -1,5 +1,9 @@
 # [ghcr.io/]kineticcafe/ansible Changelog
 
+## 5.1.0 / 2024-02-27
+
+- Upgraded to Ansible 8.7.0
+
 ## 5.0.0 / 2023-11-03
 
 - Upgraded to Python 3.12
