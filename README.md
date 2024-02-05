@@ -6,7 +6,7 @@ effort of installing it on various systems.
 
 The image is based on Debian Bookworm (slim) and includes:
 
-- Ansible 8.5.0
+- Ansible 8.7.0
 - Python 3.12
 
 These images can be pulled either from Docker Hub
@@ -18,7 +18,7 @@ These images can be pulled either from Docker Hub
 Tests have been made on Ubuntu 18 and macOS 13 (Apple Silicon).
 
 Because of recent changes to cryptographic packages in Python, support for
-linux/arm/v7 has been dropped.
+`linux/arm/v7` has been dropped.
 
 ## `kineticcafe-ansible` script Commands
 
@@ -31,9 +31,9 @@ default; this can be overridden by using `$IMAGE`:
 $ IMAGE=kineticcafe/ansible:latest ./kineticcafe-ansible --version
 ```
 
-### Installing `kinetic-ansible`
+### Installing `kineticcafe-ansible`
 
-`kinetic-ansible` can be installed with symlinks using the `install` script:
+`kineticcafe-ansible` can be installed with symlinks using the `install` script:
 
 ```sh
 curl -sSL --fail \
@@ -43,18 +43,18 @@ curl -sSL --fail \
 
 Replace `~/.local/bin` with your preferred binary directory.
 
-By default, it will download `kinetic-ansible` from GitHub and install it in the
-provided `TARGET` and make symbolic links for the following Ansible commands:
-`ansible`, `ansible-community`, `ansible-config`, `ansible-connection`,
-`ansible-console`, `ansible-doc`, `ansible-galaxy`, `ansible-inventory`,
-`ansible-playbook`, `ansible-pull`, `ansible-test`, and `ansible-vault`.
-Symbolic link creation will not overwrite files or symbolic links to locations
-_other_ than `TARGET/kinetic-ansible`.
+By default, it will download `kineticcafe-ansible` from GitHub and install it in
+the provided `TARGET` and make symbolic links for the following Ansible
+commands: `ansible`, `ansible-community`, `ansible-config`,
+`ansible-connection`, `ansible-console`, `ansible-doc`, `ansible-galaxy`,
+`ansible-inventory`, `ansible-playbook`, `ansible-pull`, `ansible-test`, and
+`ansible-vault`. Symbolic link creation will not overwrite files or symbolic
+links to locations _other_ than `TARGET/kineticcafe-ansible`.
 
 `--no-symlinks` (`-S`) may be specified to skip symbolic link creation entirely.
 
-`--force` (`-f`) may be specified to install `kinetic-ansible` even if it already
-exists, and to overwrite files and non-`TARGET/kinetic-ansible` symbolic links.
+`--force` (`-f`) may be specified to install `kineticcafe-ansible` even if it already
+exists, and to overwrite files and non-`TARGET/kineticcafe-ansible` symbolic links.
 
 `--verbose` (`-v`) will turn on trace output of commands.
 

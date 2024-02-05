@@ -4,7 +4,7 @@ build-backend = "pdm.backend"
 
 [project]
 name = "docker-ansible"
-version = "5.0.0"
+version = "5.1.0"
 description = "Ansible in Docker"
 authors = [{ name = "Austin Ziegler", email = "aziegler@kineticcommerce.com" }]
 dependencies = ["ansible~=8.2"]
