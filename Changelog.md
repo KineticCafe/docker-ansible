@@ -1,5 +1,13 @@
 # [ghcr.io/]kineticcafe/ansible Changelog
 
+## 6.0.0 / 2024-11-01
+
+- Upgraded to Python 3.13
+
+- Upgraded to Ansible 10.5.0
+
+- Changed PDM lock strategy.
+
 ## 5.1.0 / 2024-02-27
 
 - Upgraded to Ansible 8.7.0
@@ -12,8 +20,8 @@
 
 - Renamed the `run` script to `kineticcafe-ansible` and fixed several issues:
 
-  - Bash 4 or later is required for associative array support. Ensured that
-    this would be respected on macOS by using `/usr/bin/env bash` instead of
+  - Bash 4 or later is required for associative array support. Ensured that this
+    would be respected on macOS by using `/usr/bin/env bash` instead of
     `/bin/bash`.
 
   - Updated the script to use the current version of the image.
@@ -43,13 +51,13 @@
 
 - Upgraded to Ansible 8.2.0
 
-- Changed from [pipenv][] to [pdm][] and `pyproject.toml` because of ongoing
-  issues with Dependabot not detecting dependencies in `Pipfile.lock` as
+- Changed from [pipenv][pipenv] to [pdm][pdm] and `pyproject.toml` because of
+  ongoing issues with Dependabot not detecting dependencies in `Pipfile.lock` as
   opposed to only in `requirements.txt` (the inverse of
   dependabot/dependabot-core#6200). After trying Poetry (predates the latest
-  Python packaging PEPs), rye (experimental), and hatch (no lock file), [pdm][]
-  seems to fit the bill best for the limited needs that we have with this
-  project.
+  Python packaging PEPs), rye (experimental), and hatch (no lock file),
+  [pdm][pdm] seems to fit the bill best for the limited needs that we have with
+  this project.
 
 - Experimentally removed the generated `requirements.txt` file. It isn't used,
   but it has been valuable in getting update notifications from Dependabot,
@@ -77,7 +85,7 @@
 - Upgraded from Debian Buster (slim) to Debian Bullseye (slim) as the base
   image. Using Python 3.10 instead of Python 3.9.
 
-- Changed from `requirements.txt` to `Pipfile` with [pipenv][].
+- Changed from `requirements.txt` to `Pipfile` with [pipenv][pipenv].
 
 - Fixed issues for running the Ansible scripts in a non-interactive environment.
 
