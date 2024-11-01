@@ -27,7 +27,6 @@ dev = []
 
 [tool.pdm.scripts]
 update-lock.composite = [
-  "pdm lock --python=3.12 --platform=alpine",
-  "pdm lock --python=3.12 --platform=linux --append",
-  "pdm lock --python=3.12 --platform=macos --append",
+  "pdm lock --python=3.12 --platform=manylinux_2_36_x86_64",
+  "pdm lock --python=3.12 --platform=manylinux_2_36_aarch64 --append",
 ]
