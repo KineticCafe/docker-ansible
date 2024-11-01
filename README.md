@@ -1,17 +1,16 @@
 # [ghcr.io/]kineticcafe/ansible: Ansible in Docker
 
-This is a simple Docker container that contains [Ansible][]. It has been created
-so that it's easier to work with `ansible-playbook` without going through the
-effort of installing it on various systems.
+This is a simple Docker container that contains [Ansible][Ansible]. It has been
+created so that it's easier to work with `ansible-playbook` without going
+through the effort of installing it on various systems.
 
 The image is based on Debian Bookworm (slim) and includes:
 
-- Ansible 8.7.0
-- Python 3.12
+- Ansible 10.5.0
+- Python 3.13
 
-These images can be pulled either from Docker Hub
-(`kineticcafe/ansible:5.0`) or the GitHub Container Registry
-(`ghcr.io/kineticcafe/ansible:5.0`).
+These images can be pulled either from Docker Hub (`kineticcafe/ansible:6.0`) or
+the GitHub Container Registry (`ghcr.io/kineticcafe/ansible:6.0`).
 
 ## Support
 
@@ -24,7 +23,7 @@ Because of recent changes to cryptographic packages in Python, support for
 
 The `kineticcafe-ansible` script is recommended for running everything as it
 manages environment variable configuration for each run. The
-`kineticcafe-ansible` script will pull from `ghcr.io/kineticcafe/ansible:5.0` by
+`kineticcafe-ansible` script will pull from `ghcr.io/kineticcafe/ansible:6.0` by
 default; this can be overridden by using `$IMAGE`:
 
 ```sh
@@ -53,14 +52,15 @@ links to locations _other_ than `TARGET/kineticcafe-ansible`.
 
 `--no-symlinks` (`-S`) may be specified to skip symbolic link creation entirely.
 
-`--force` (`-f`) may be specified to install `kineticcafe-ansible` even if it already
-exists, and to overwrite files and non-`TARGET/kineticcafe-ansible` symbolic links.
+`--force` (`-f`) may be specified to install `kineticcafe-ansible` even if it
+already exists, and to overwrite files and non-`TARGET/kineticcafe-ansible`
+symbolic links.
 
 `--verbose` (`-v`) will turn on trace output of commands.
 
 ## Maintenance/Upgrade Instructions
 
-1. Install [pdm][]: `pipx install pdm`.
+1. Install [pdm][pdm]: `pipx install pdm`.
 
 2. Edit the `Dockerfile` to update the Python version, if required.
 

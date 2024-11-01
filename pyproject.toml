@@ -4,10 +4,10 @@ build-backend = "pdm.backend"
 
 [project]
 name = "docker-ansible"
-version = "5.1.0"
+version = "6.0.0"
 description = "Ansible in Docker"
 authors = [{ name = "Austin Ziegler", email = "aziegler@kineticcommerce.com" }]
-dependencies = ["ansible~=8.2"]
+dependencies = ["ansible~=10.5"]
 requires-python = ">=3.12"
 license = { text = "MIT" }
 
@@ -24,3 +24,10 @@ name = "pypi"
 
 [tool.pdm.dev-dependencies]
 dev = []
+
+[tool.pdm.scripts]
+update-lock.composite = [
+  "pdm lock --python=3.12 --platform=alpine",
+  "pdm lock --python=3.12 --platform=linux --append",
+  "pdm lock --python=3.12 --platform=macos --append",
+]

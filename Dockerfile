@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 
-FROM python:3.12-slim-bookworm AS builder
+FROM python:3.13-slim-bookworm AS builder
 
 ENV LC_ALL=C.UTF-8 \
     LANG=C.UTF-8 \
@@ -41,7 +41,7 @@ python3 -m pip install --user pdm
 /home/ansible/.local/bin/pdm sync --clean --production --no-editable
 BUILD_PROJECT
 
-FROM python:3.12-slim-bookworm AS runtime
+FROM python:3.13-slim-bookworm AS runtime
 
 RUN <<SETUP
 set -eux
