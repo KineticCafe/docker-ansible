@@ -1,5 +1,14 @@
 # [ghcr.io/]kineticcafe/ansible: Ansible in Docker
 
+> [!IMPORTANT]
+>
+> This image will no longer receive updates and the repo is being archived as we
+> no longer use Ansible. I recommend forking this repo if you wish to maintain a
+> similar image for your organization as the architecture and actions work very
+> well.
+>
+> Kinetic Cafe open source team
+
 This is a simple Docker container that contains [Ansible][Ansible]. It has been
 created so that it's easier to work with `ansible-playbook` without going
 through the effort of installing it on various systems.
